@@ -1,33 +1,28 @@
 {
-  "root": true,
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": { "project": "./tsconfig.json" },
-  "env": { "es6": true },
-  "ignorePatterns": ["node_modules", "build", "coverage"],
-  "plugins": ["import", "eslint-comments"],
+  "env": {
+    "es2021": true,
+    "node": true
+  },
   "extends": [
-    "eslint:recommended",
-    "plugin:eslint-comments/recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:import/typescript",
-        "prettier",
-    "prettier/@typescript-eslint"
+    "airbnb-base",
+    "airbnb-typescript/base"
   ],
-  "globals": { "BigInt": true, "console": true, "WebAssembly": true },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": ["./tsconfig.json"],
+    "sourceType": "module",
+    "createDefaultProgram": true
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "jest"
+  ],
   "rules": {
-    "@typescript-eslint/explicit-module-boundary-types": "off",
-    "eslint-comments/disable-enable-pair": [
-      "error",
-      { "allowWholeFile": true }
-    ],
-    "eslint-comments/no-unused-disable": "error",
-    "import/order": [
-      "error",
-      { "newlines-between": "always", "alphabetize": { "order": "asc" } }
-    ],
-    "sort-imports": [
-      "error",
-      { "ignoreDeclarationSort": true, "ignoreCase": true }
-    ]
+    "import/prefer-default-export": "off",
+    "@typescript-eslint/space-before-blocks": "off",
+    "consistent-return": "off",
+    "no-plusplus": "off",
+    "class-methods-use-this": ["warn"],
+    "max-len": ["warn"]
   }
 }

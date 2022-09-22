@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "skipLibCheck": true,
     "incremental": true,
     "target": "es2017",
     "outDir": "build/main",
@@ -41,7 +42,14 @@
     "types": ["jest", "node"],
     "typeRoots": ["node_modules/@types", "src/types"]
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules/**"],
+  "include": ["src/*"],
+  "exclude": [
+    "node_modules",
+    "./node_modules",
+    "./node_modules/*",
+    "./node_modules/@types/*",
+    "./node_modules/@types/jest/index.d.ts",
+    "./node_modules/@types/node/index.d.ts",
+  ],
   "compileOnSave": false
 }
