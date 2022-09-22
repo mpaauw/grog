@@ -1,0 +1,20 @@
+name: Build & Test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "*" ]
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install
+        run: npm install --force
+      - name: Compile
+        uses: icrawl/action-tsc@v1
+      - name: Test
+        run: npm run test
