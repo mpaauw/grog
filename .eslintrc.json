@@ -23,6 +23,7 @@
     "consistent-return": "off",
     "no-plusplus": "off",
     "class-methods-use-this": ["warn"],
-    "max-len": ["warn"]
+    "max-len": ["warn"],
+    "@typescript-eslint/no-unused-vars": "off"
   }
 }

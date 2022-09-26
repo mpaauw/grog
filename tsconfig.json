@@ -35,21 +35,16 @@
     "pretty": true /* Stylize errors and messages using color and context. */,
 
     /* Experimental Options */
-    // "experimentalDecorators": true /* Enables experimental support for ES7 decorators. */,
-    // "emitDecoratorMetadata": true /* Enables experimental support for emitting type metadata for decorators. */,
+    "experimentalDecorators": true /* Enables experimental support for ES7 decorators. */,
+    "emitDecoratorMetadata": true /* Enables experimental support for emitting type metadata for decorators. */,
 
     "lib": ["es2017"],
     "types": ["jest", "node"],
     "typeRoots": ["node_modules/@types", "src/types"]
   },
-  "include": ["src/*"],
+  "include": ["src/**/*"],
   "exclude": [
-    "node_modules",
-    "./node_modules",
-    "./node_modules/*",
-    "./node_modules/@types/*",
-    "./node_modules/@types/jest/index.d.ts",
-    "./node_modules/@types/node/index.d.ts",
+    "node_modules/**",
   ],
   "compileOnSave": false
 }

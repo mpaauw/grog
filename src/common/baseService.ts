@@ -1,5 +1,5 @@
 import { Logger } from 'winston';
-import { LoggerUtil } from '../../util/loggerUtil';
+import { LoggerUtil } from '../util/loggerUtil';
 
 export class BaseService {
   public logger!: Logger;

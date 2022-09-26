@@ -1,18 +1,13 @@
 /* eslint-disable new-cap */
 
 import { ModelTypes, Ottoman } from 'ottoman';
+import { singleton } from 'tsyringe';
 import { BaseService } from '../common/baseService';
-import { CardDocument } from '../../model/database/cardDocument';
-import { CARD_DOCUMENT_VERSION } from '../../constant/database/databaseConstants';
-import { DataSource } from '../../model/database/dataSource';
+import { CARD_DOCUMENT_VERSION } from '../common/constant';
+import { CardDocument } from './model/cardDocument';
+import { DataSource } from './model/dataSource';
 
-const {
-  COUCHBASE_URL,
-  COUCHBASE_BUCKET_NAME,
-  COUCHBASE_USERNAME,
-  COUCHBASE_PASSWORD,
-} = process.env;
-
+@singleton()
 export class DatabaseService extends BaseService {
   private ottoman!: Ottoman;
 
@@ -28,13 +23,14 @@ export class DatabaseService extends BaseService {
   public async init(): Promise<void> {
     try {
       await this.ottoman.connect({
-        connectionString: COUCHBASE_URL,
-        bucketName: COUCHBASE_BUCKET_NAME,
-        username: COUCHBASE_USERNAME,
-        password: COUCHBASE_PASSWORD,
+        connectionString: process.env.COUCHBASE_URL,
+        bucketName: process.env.COUCHBASE_BUCKET_NAME,
+        username: process.env.COUCHBASE_USERNAME,
+        password: process.env.COUCHBASE_PASSWORD,
       });
       await this.ottoman.start();
       await this.instantiateModels();
+      this.logger.info('Successfully initialized Database Service.');
     } catch (error) {
       this.logger.error('Failed to initialize DatabaseService.', {
         error,
@@ -46,7 +42,7 @@ export class DatabaseService extends BaseService {
   public async save<T>(data: T): Promise<void> {
     try {
       const cardDocument = new this.documentModel(
-        new CardDocument(CARD_DOCUMENT_VERSION, DataSource.Scryfall, data),
+        new CardDocument(CARD_DOCUMENT_VERSION, DataSource.Scryfall, data)
       );
       await cardDocument.save();
     } catch (error) {
@@ -58,12 +54,35 @@ export class DatabaseService extends BaseService {
     }
   }
 
-  public async getById(documentId: string): Promise<any> {
+  public async find(filter?: any, options?: any): Promise<any> {
     try {
-      const result = await this.documentModel.findById(documentId);
-      return result;
+      return await this.documentModel.find(filter, options);
     } catch (error) {
-      this.logger.error('Failed to get Document by ID.', {
+      this.logger.error('Failed to find Document.', {
+        filter,
+        error,
+      });
+      throw error;
+    }
+  }
+
+  public async findOne(filter?: any, options?: any): Promise<any> {
+    try {
+      return await this.documentModel.findOne(filter, options);
+    } catch (error) {
+      this.logger.error('Failed to find one Document.', {
+        filter,
+        error,
+      });
+      throw error;
+    }
+  }
+
+  public async findById(documentId: string): Promise<any> {
+    try {
+      return await this.documentModel.findById(documentId);
+    } catch (error) {
+      this.logger.error('Failed to find Document by ID.', {
         documentId,
         error,
       });

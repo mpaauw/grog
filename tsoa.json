@@ -1,0 +1,10 @@
+{
+    "controllerPathGlobs": ["./src/**/*Controller.ts"],
+    "entryFile": "./src/index.ts",
+    "spec": {
+        "outputDirectory": "./src/api/spec"
+    },
+    "routes": {
+        "routesDir": "./src/api/routes"
+    }
+}
