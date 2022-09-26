@@ -7,3 +7,6 @@ src/**.js
 coverage
 *.log
 yarn.lock
+.env
+src/api/routes/routes.ts
+src/api/spec/swagger.json

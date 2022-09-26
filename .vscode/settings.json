@@ -3,5 +3,10 @@
   "cSpell.enabled": true,
   "editor.formatOnSave": true,
   "typescript.tsdk": "node_modules/typescript/lib",
-  "typescript.enablePromptUseWorkspaceTsdk": true
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "js/ts.implicitProjectConfig.experimentalDecorators": true,
+  "cSpell.words": [
+    "tsoa"
+  ],
+  "git.mergeEditor": false
 }

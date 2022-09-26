@@ -1,6 +1,20 @@
 {
   "version": "0.2.0",
   "configurations": [
+    {
+      "name": "Launch Program",
+      "program": "${workspaceFolder}/build/main/index.js",
+      "outFiles": [
+        "${workspaceFolder}/**/*.js",
+        "!**/node_modules/**"
+      ],
+      "request": "launch",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "node",
+      "outputCapture": "std"
+    },
     // To debug, make sure a *.spec.ts file is active in the editor, then run a configuration
     {
       "type": "node",
