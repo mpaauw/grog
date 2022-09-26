@@ -7,5 +7,6 @@
   "js/ts.implicitProjectConfig.experimentalDecorators": true,
   "cSpell.words": [
     "tsoa"
-  ]
+  ],
+  "git.mergeEditor": false
 }
