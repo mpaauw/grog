@@ -36,7 +36,7 @@ export class CardService extends BaseService {
 
       const bulkDataStream = await Scry.BulkData.downloadByType(
         'default_cards',
-        0
+        0,
       );
       if (!bulkDataStream) {
         throw new Error('Failed to download bulk data stream from Scryfall.');

@@ -42,7 +42,7 @@ export class DatabaseService extends BaseService {
   public async save<T>(data: T): Promise<void> {
     try {
       const cardDocument = new this.documentModel(
-        new CardDocument(CARD_DOCUMENT_VERSION, DataSource.Scryfall, data)
+        new CardDocument(CARD_DOCUMENT_VERSION, DataSource.Scryfall, data),
       );
       await cardDocument.save();
     } catch (error) {
