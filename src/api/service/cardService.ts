@@ -5,21 +5,39 @@ import { Card } from 'scryfall-sdk';
 import { BaseService } from '../../common/baseService';
 import { DatabaseService } from '../../database/databaseService';
 import { CardDocument } from '../../database/model/cardDocument';
+import { CacheService } from '../../cache/cacheService';
 
 @singleton()
 export class CardService extends BaseService {
   private databaseService!: DatabaseService;
 
+  private cacheService!: CacheService;
+
   public constructor() {
     super(__filename);
     this.databaseService = container.resolve(DatabaseService);
+    this.cacheService = container.resolve(CacheService);
   }
 
   public async getCard(cardName: string): Promise<CardDocument<Card>> {
     try {
-      return await this.databaseService.findOne({
+      const cacheResult = await this.cacheService.get<CardDocument<Card>>(
+        cardName,
+      );
+      if (cacheResult != null) {
+        return cacheResult;
+      }
+      this.logger.warn(
+        'Encountered cache miss; retrieving Card data from Database.',
+        {
+          cardName,
+        },
+      );
+      const databaseResult = await this.databaseService.findOne({
         'data.name': cardName,
       });
+      await this.cacheService.put(cardName, databaseResult);
+      return databaseResult;
     } catch (error) {
       this.logger.error('Failed to get Card.', {
         cardName,
@@ -30,7 +48,7 @@ export class CardService extends BaseService {
   }
 
   // TODO: move this method into a different class outside of the API
-  public async downloadAllCards(): Promise<void> {
+  private async downloadAllCards(): Promise<void> {
     try {
       await this.databaseService.init();
 
