@@ -7,9 +7,12 @@ import { BaseService } from '../common/baseService';
 export class CacheService extends BaseService {
   private cacheClient!: Client;
 
+  private defaultTtl!: number;
+
   public constructor() {
     super(__filename);
     this.cacheClient = new Client();
+    this.defaultTtl = parseInt(process.env.REDIS_DEFAULT_TTL_SECONDS, 10);
   }
 
   public async init(): Promise<void> {
@@ -42,10 +45,15 @@ export class CacheService extends BaseService {
     }
   }
 
-  public async put<T>(key: string, value: T): Promise<void> {
+  public async put<T>(
+    key: string,
+    value: T,
+    ttlSeconds: number = this.defaultTtl,
+  ): Promise<void> {
     try {
       const serializedValue = JSON.stringify(value);
       await this.cacheClient.set(key, serializedValue);
+      await this.cacheClient.expire(key, ttlSeconds);
     } catch (error) {
       this.logger.error('Failed to put entry key-value pair into Cache.', {
         key,
