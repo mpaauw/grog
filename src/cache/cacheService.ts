@@ -48,7 +48,7 @@ export class CacheService extends BaseService {
   public async put<T>(
     key: string,
     value: T,
-    ttlSeconds: number = this.defaultTtl
+    ttlSeconds: number = this.defaultTtl,
   ): Promise<void> {
     try {
       const serializedValue = JSON.stringify(value);
