@@ -6,6 +6,7 @@ import { BaseService } from '../../common/baseService';
 import { DatabaseService } from '../../database/databaseService';
 import { CardDocument } from '../../database/model/cardDocument';
 import { CacheService } from '../../cache/cacheService';
+import { ImageHelper } from '../../util/imageHelper';
 
 @singleton()
 export class CardService extends BaseService {
@@ -41,6 +42,20 @@ export class CardService extends BaseService {
     } catch (error) {
       this.logger.error('Failed to get Card.', {
         cardName,
+        error,
+      });
+      throw error;
+    }
+  }
+
+  public async getCardFromImage(
+    imageSource: string,
+  ): Promise<CardDocument<Card>> {
+    try {
+      const cardName = await ImageHelper.getCardNameTextFromImage(imageSource);
+      return await this.getCard(cardName);
+    } catch (error) {
+      this.logger.error('Failed to get Card from image.', {
         error,
       });
       throw error;
