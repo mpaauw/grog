@@ -1,17 +1,16 @@
 /* eslint-disable new-cap */
 
-import { ModelTypes, Ottoman } from 'ottoman';
+import {
+  IModel, ModelOptions, Ottoman, Schema,
+} from 'ottoman';
 import { singleton } from 'tsyringe';
 import { BaseService } from '../common/baseService';
-import { CARD_DOCUMENT_VERSION } from '../common/constant';
-import { CardDocument } from './model/cardDocument';
-import { DataSource } from './model/dataSource';
 
 @singleton()
-export class DatabaseService extends BaseService {
+export class DatabaseService<DocumentType, ReturnType> extends BaseService {
   private ottoman!: Ottoman;
 
-  private documentModel!: ModelTypes<any>;
+  private dataModel!: IModel<DocumentType, ReturnType>;
 
   public constructor() {
     super(__filename);
@@ -29,7 +28,6 @@ export class DatabaseService extends BaseService {
         password: process.env.COUCHBASE_PASSWORD,
       });
       await this.ottoman.start();
-      await this.instantiateModels();
       this.logger.info('Successfully initialized Database Service.');
     } catch (error) {
       this.logger.error('Failed to initialize DatabaseService.', {
@@ -39,12 +37,18 @@ export class DatabaseService extends BaseService {
     }
   }
 
-  public async save<T>(data: T): Promise<void> {
+  public registerModel(
+    modelName: string,
+    modelSchema: Schema,
+    modelOptions?: ModelOptions,
+  ): void {
+    this.dataModel = this.ottoman.model(modelName, modelSchema, modelOptions);
+  }
+
+  public async save(data: DocumentType): Promise<void> {
     try {
-      const cardDocument = new this.documentModel(
-        new CardDocument(CARD_DOCUMENT_VERSION, DataSource.Scryfall, data),
-      );
-      await cardDocument.save();
+      const document = this.dataModel.fromData(data);
+      await document.save();
     } catch (error) {
       this.logger.error('Failed to save Document.', {
         data,
@@ -56,7 +60,7 @@ export class DatabaseService extends BaseService {
 
   public async find(filter?: any, options?: any): Promise<any> {
     try {
-      return await this.documentModel.find(filter, options);
+      return await this.dataModel.find(filter, options);
     } catch (error) {
       this.logger.error('Failed to find Document.', {
         filter,
@@ -68,7 +72,7 @@ export class DatabaseService extends BaseService {
 
   public async findOne(filter?: any, options?: any): Promise<any> {
     try {
-      return await this.documentModel.findOne(filter, options);
+      return await this.dataModel.findOne(filter, options);
     } catch (error) {
       this.logger.error('Failed to find one Document.', {
         filter,
@@ -80,25 +84,10 @@ export class DatabaseService extends BaseService {
 
   public async findById(documentId: string): Promise<any> {
     try {
-      return await this.documentModel.findById(documentId);
+      return await this.dataModel.findById(documentId);
     } catch (error) {
       this.logger.error('Failed to find Document by ID.', {
         documentId,
-        error,
-      });
-      throw error;
-    }
-  }
-
-  private async instantiateModels(): Promise<void> {
-    try {
-      this.documentModel = this.ottoman.model('CardDocument', {
-        version: String,
-        dataSource: String,
-        data: Object,
-      });
-    } catch (error) {
-      this.logger.error('Failed to instantiate DatabaseService models.', {
         error,
       });
       throw error;

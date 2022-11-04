@@ -1,6 +1,6 @@
 import { DataSource } from './dataSource';
 
-export class CardDocument<T> {
+export class GrogCard<T> {
   public version!: string;
 
   public dataSource!: DataSource;
