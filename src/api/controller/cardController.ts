@@ -2,7 +2,7 @@ import {
   Controller, Get, Path, Route,
 } from 'tsoa';
 import { container } from 'tsyringe';
-import { CardDocument } from '../../database/model/cardDocument';
+import { GrogCard } from '../../common/model/grogCard';
 import { CardService } from '../service/cardService';
 
 @Route('/v1/card')
@@ -15,7 +15,7 @@ export class CardController extends Controller {
   }
 
   @Get('{cardName}')
-  public async getCard(@Path() cardName: string): Promise<CardDocument<any>> {
+  public async getCard(@Path() cardName: string): Promise<GrogCard<any>> {
     return this.cardService.getCard(cardName);
   }
 }
