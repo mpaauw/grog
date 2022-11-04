@@ -1,29 +1,29 @@
-import * as Scry from 'scryfall-sdk';
-import * as JSONStream from 'JSONStream';
 import { container, singleton } from 'tsyringe';
 import { Card } from 'scryfall-sdk';
 import { BaseService } from '../../common/baseService';
 import { DatabaseService } from '../../database/databaseService';
-import { CardDocument } from '../../database/model/cardDocument';
+import { GrogCard } from '../../common/model/grogCard';
 import { CacheService } from '../../cache/cacheService';
+import { CardSchema } from '../../database/schema/card.schema';
 
 @singleton()
 export class CardService extends BaseService {
-  private databaseService!: DatabaseService;
+  private databaseService!: DatabaseService<GrogCard<Card>, GrogCard<Card>>;
 
   private cacheService!: CacheService;
 
   public constructor() {
     super(__filename);
-    this.databaseService = container.resolve(DatabaseService);
+    this.databaseService = container.resolve(
+      DatabaseService<GrogCard<Card>, GrogCard<Card>>,
+    );
+    this.databaseService.registerModel('card', CardSchema);
     this.cacheService = container.resolve(CacheService);
   }
 
-  public async getCard(cardName: string): Promise<CardDocument<Card>> {
+  public async getCard(cardName: string): Promise<GrogCard<Card>> {
     try {
-      const cacheResult = await this.cacheService.get<CardDocument<Card>>(
-        cardName,
-      );
+      const cacheResult = await this.cacheService.get<GrogCard<Card>>(cardName);
       if (cacheResult != null) {
         return cacheResult;
       }
@@ -47,29 +47,35 @@ export class CardService extends BaseService {
     }
   }
 
-  // TODO: move this method into a different class outside of the API
-  private async downloadAllCards(): Promise<void> {
-    try {
-      await this.databaseService.init();
+  // // TODO: move this method into a different class outside of the API
+  // private async downloadAllCards(): Promise<void> {
+  //   try {
+  //     await this.databaseService.init();
 
-      const bulkDataStream = await Scry.BulkData.downloadByType(
-        'default_cards',
-        0,
-      );
-      if (!bulkDataStream) {
-        throw new Error('Failed to download bulk data stream from Scryfall.');
-      }
+  //     const bulkDataStream = await Scry.BulkData.downloadByType(
+  //       'default_cards',
+  //       0
+  //     );
+  //     if (!bulkDataStream) {
+  //       throw new Error('Failed to download bulk data stream from Scryfall.');
+  //     }
 
-      await bulkDataStream
-        .pipe(await JSONStream.parse('*'))
-        .on('data', async (data) => {
-          await this.databaseService.save(data);
-        });
-    } catch (error) {
-      this.logger.error('Failed to download all Cards.', {
-        error,
-      });
-      throw error;
-    }
-  }
+  //     await bulkDataStream
+  //       .pipe(await JSONStream.parse('*'))
+  //       .on('data', async (data) => {
+  //         await this.databaseService.save(
+  //           new GrogCard(
+  //             Constants.CARD_DOCUMENT_VERSION,
+  //             DataSource.Scryfall,
+  //             data
+  //           )
+  //         );
+  //       });
+  //   } catch (error) {
+  //     this.logger.error('Failed to download all Cards.', {
+  //       error,
+  //     });
+  //     throw error;
+  //   }
+  // }
 }

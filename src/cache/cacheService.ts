@@ -1,5 +1,5 @@
 import { singleton } from 'tsyringe';
-import { Client, RedisError } from 'redis-om';
+import { Client } from 'redis-om';
 import { createClient } from 'redis';
 import { BaseService } from '../common/baseService';
 
