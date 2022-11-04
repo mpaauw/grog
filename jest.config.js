@@ -6,10 +6,10 @@ module.exports = {
   testTimeout: 60000,
   coverageThreshold: {
     global: {
-      statements: 90,
-      branch: 90,
-      functions: 90,
-      lines: 90
+      statements: 70,
+      branch: 70,
+      functions: 70,
+      lines: 70
     }
   }
 };
