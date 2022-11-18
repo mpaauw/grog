@@ -60,7 +60,7 @@ Note that startup dependencies are spun-up asynchronously, so the logs on your m
 ## Usage
 Once you've set up your environment and built your project / image, you should be good to start using Grog!
 
-Try the sample request to retrieve card data on `Phyrexian Hulk`, as an example (replacing the domain / port with your specific environment values, if they differ from the defaults):
+Try the sample request to retrieve card data on [Phyrexian Hulk](https://scryfall.com/card/tpr/230/phyrexian-hulk), as an example (replacing the domain / port with your specific environment values, if they differ from the defaults):
 
 ```
 curl --location --request GET 'localhost:3000/v1/card/Phyrexian Hulk'
