@@ -1,6 +1,6 @@
 ![Build Health](https://github.com/mpaauw/grog/actions/workflows/build-and-test.yml/badge.svg)
 
-# grog
+# grog :beers: :flower_playing_cards:
 
 A fully-functional, locally-run MTG API service.
 
