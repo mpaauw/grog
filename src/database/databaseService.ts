@@ -5,9 +5,14 @@ import {
 } from 'ottoman';
 import { singleton } from 'tsyringe';
 import { BaseService } from '../common/baseService';
+import { PingPong } from '../common/model/pingPong';
+import { Service } from '../common/service';
+import { Stopwatch } from '../util/stopwatch';
 
 @singleton()
-export class DatabaseService<DocumentType, ReturnType> extends BaseService {
+export class DatabaseService<DocumentType, ReturnType>
+  extends BaseService
+  implements Service {
   private ottoman!: Ottoman;
 
   private dataModel!: IModel<DocumentType, ReturnType>;
@@ -21,16 +26,27 @@ export class DatabaseService<DocumentType, ReturnType> extends BaseService {
 
   public async init(): Promise<void> {
     try {
+      await Stopwatch.sleep(
+        parseInt(process.env.COUCHBASE_INIT_DELAY_SECONDS, 10) * 1000 + 5000,
+      );
+
       await this.ottoman.connect({
         connectionString: process.env.COUCHBASE_URL,
         bucketName: process.env.COUCHBASE_BUCKET_NAME,
-        username: process.env.COUCHBASE_USERNAME,
-        password: process.env.COUCHBASE_PASSWORD,
+        username: process.env.COUCHBASE_ADMINISTRATOR_USERNAME,
+        password: process.env.COUCHBASE_ADMINISTRATOR_PASSWORD,
       });
+
       await this.ottoman.start();
-      this.logger.info('Successfully initialized Database Service.');
+
+      this.logger.info('Successfully initialized Database Service.', {
+        couchbaseUrl: process.env.COUCHBASE_URL,
+        bucketName: process.env.COUCHBASE_BUCKET_NAME,
+      });
     } catch (error) {
-      this.logger.error('Failed to initialize DatabaseService.', {
+      this.logger.error('Failed to initialize Database Service.', {
+        couchbaseUrl: process.env.COUCHBASE_URL,
+        bucketName: process.env.COUCHBASE_BUCKET_NAME,
         error,
       });
       throw error;

@@ -3,8 +3,8 @@ import { container } from 'tsyringe';
 import { faker } from '@faker-js/faker';
 import { CardService } from './cardService';
 import { DocumentNotFoundError } from 'ottoman';
-import { GrogCard } from '../../common/model/grogCard';
 import { DataSource } from '../../common/model/dataSource';
+import { GrogData } from '../../common/model/grogData';
 
 describe('cardService_Tests_', () => {
   let cardService!: CardService;
@@ -31,6 +31,11 @@ describe('cardService_Tests_', () => {
     test('getCard_CardNotFoundInCacheOrDatabase_ThrowDocumentNotFoundError', async () => {
       // arrange
       jest
+        .spyOn(cardService as any, 'ping')
+        .mockImplementationOnce(async () => {
+          return;
+        });
+      jest
         .spyOn(cardService['cacheService'], 'get')
         .mockImplementationOnce(async () => {
           return null;
@@ -49,11 +54,16 @@ describe('cardService_Tests_', () => {
 
     test('getCard_CardNotFoundInCacheButFoundInDatabase_ReturnCardDocument', async () => {
       // arrange
-      const expectedResult = new GrogCard<any>(
+      const expectedResult = new GrogData<any>(
         faker.hacker.phrase(),
         DataSource.Scryfall,
         faker.datatype.json()
       );
+      jest
+        .spyOn(cardService as any, 'ping')
+        .mockImplementationOnce(async () => {
+          return;
+        });
       const cacheGetMock = jest
         .spyOn(cardService['cacheService'], 'get')
         .mockImplementationOnce(async () => {
@@ -83,11 +93,16 @@ describe('cardService_Tests_', () => {
 
     test('getCard_CardFoundInCache_ReturnCardDocument', async () => {
       // arrange
-      const expectedResult = new GrogCard<any>(
+      const expectedResult = new GrogData<any>(
         faker.hacker.phrase(),
         DataSource.Scryfall,
         faker.datatype.json()
       );
+      jest
+        .spyOn(cardService as any, 'ping')
+        .mockImplementationOnce(async () => {
+          return;
+        });
       const cacheGetMock = jest
         .spyOn(cardService['cacheService'], 'get')
         .mockImplementationOnce(async () => {

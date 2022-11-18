@@ -3,13 +3,13 @@
 import { createWorker, PSM } from 'tesseract.js';
 import { LoggerUtil } from './loggerUtil';
 
-export class ImageHelper {
+export class ImageUtil {
   private static logger = LoggerUtil.createLogger(
-    process.env.ENVIRONMENT === 'local' ? __filename : ''
+    process.env.ENVIRONMENT === 'local' ? __filename : '',
   );
 
   public static async getCardNameTextFromImage(
-    imageSource: string
+    imageSource: string,
   ): Promise<string> {
     try {
       // TODO: Worker should probably be initialized within ctor / init scope, not method.
