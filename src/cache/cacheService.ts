@@ -20,11 +20,14 @@ export class CacheService extends BaseService {
       const redis = createClient({
         url: process.env.REDIS_URL,
       });
+
       await redis.connect();
+
       this.cacheClient = await new Client().use(redis);
       this.logger.info('Successfully initialized Cache Service.');
     } catch (error) {
       this.logger.error('Failed to initialize Cache Service.', {
+        url: process.env.REDIS_URL,
         error,
       });
       throw error;

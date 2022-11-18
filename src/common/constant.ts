@@ -1,1 +1,2 @@
-export const CARD_DOCUMENT_VERSION = 'v1';
+export const PINGPONG_VERSION = 'pingpong.v1';
+export const CARD_DOCUMENT_VERSION = 'card.v1';
