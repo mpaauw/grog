@@ -66,7 +66,7 @@ Try the sample request to retrieve card data on [Phyrexian Hulk](https://scryfal
 curl --location --request GET 'localhost:3000/v1/card/Phyrexian Hulk'
 ```
 
-Running the above curl command, you should get back the following (response truncated due to save space!):
+Running the above curl command, you should get back the following (response truncated to save space!):
 
 ```
 {
